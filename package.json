@@ -1,0 +1,22 @@
+{
+  "name": "dungeonmapster",
+  "version": "0.0.1",
+  "description": "A map program for Game Masters!!",
+  "main": "src/main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Code-Rooster/GameMapster.git"
+  },
+  "author": "RoosterWithHands",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Code-Rooster/GameMapster/issues"
+  },
+  "homepage": "https://github.com/Code-Rooster/GameMapster#readme",
+  "dependencies": {
+    "electron-nightly": "^21.0.0-nightly.20220705"
+  }
+}
