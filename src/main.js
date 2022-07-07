@@ -1,4 +1,5 @@
 const { app, BrowserWindow } = require("electron");
+const path = require("path");
 
 app.whenReady().then(() => {
     createWindow();
@@ -7,7 +8,7 @@ app.whenReady().then(() => {
 const createWindow = () => {
     const win = new BrowserWindow({
         width: 800,
-        height: 600
+        height: 500
     })
 
     win.loadFile("./src/pages/index.html");
