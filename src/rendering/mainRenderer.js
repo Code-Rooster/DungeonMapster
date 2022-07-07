@@ -1,36 +1,66 @@
 const canvas = document.getElementById("hexCanvas");
 const ctx = canvas.getContext('2d');
 
+const rowSlider = document.getElementById("rowSlider");
+const columnSlider = document.getElementById("columnSlider");
+
+var topWidth = 50;
+var hexHeight = 50;
+var angle = 135;
+var hex = { topWidth: topWidth, height: hexHeight, angle: angle };
+
+var rows = 1;
+var columns = 1;
+
+window.onresize = redrawCanvas;
+
+rowSlider.oninput = function() {
+    rows = this.value;
+    redrawCanvas();
+}
+
+columnSlider.oninput = function() {
+    columns = this.value;
+    redrawCanvas();
+}
+
 init();
 
 function init() {
-    let tW = 50;
-    let h = 50;
-    let a = 135;
-
-    let hex = { topWidth: tW, height: h, angle: a };
-
     console.log("initializing :)");
 
-    drawGrid(hex, 10, 10);
+    drawGrid(hex, rows, columns);
+}
+
+function redrawCanvas() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    drawGrid(hex, rows, columns);
 }
 
 function drawGrid(hexagon, rows, columns) {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    ctx.fillStyle = "#19181A";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    let offset = getOffset(rows, columns, hexagon.topWidth, hexagon.height);
+
     for (let s = 0; s < rows; s++) {
         for (let r = 0; r < columns; r++) {
             let q = s + r;
             let baseCoords = hexToCartCoords(s, q, r);
             baseCoords.x *= -(hexagon.height * Math.tan(angleToRad(hexagon.angle)) / 2 - hexagon.topWidth);
             baseCoords.y *= hexagon.height;
-            let offset = getOffset(rows, columns, hexagon.topWidth, hexagon.height);
             drawHex({ x: baseCoords.x + offset.x, y: baseCoords.y + offset.y } , hexagon.topWidth, hexagon.height, angleToRad(hexagon.angle));
         }
     }
 }
 
 function getOffset(rows, columns, topWidth, height) {
-    let xOffset = 400 + (((rows + columns) / 2 - 1) * -(200 / 3));
-    let yOffset = 250;
+    let xOffset = (canvas.width) - ((rows + columns - 1) * topWidth / 1.5);
+    let yOffset = canvas.height / 2;
     return { x: xOffset, y: yOffset };
 }
 
@@ -69,6 +99,9 @@ function drawHex(cartCoords, topWidth, height, rad) {
 
     ctx.lineTo(initX, initY);
 
+    ctx.lineWidth = 3;
+
+    ctx.strokeStyle = "#CEBC81";
     ctx.stroke();
 }
 

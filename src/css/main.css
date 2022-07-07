@@ -1,7 +1,18 @@
-canvas {
+body {
     display: block;
+    margin: 0;
+    overflow: hidden;
+    position: relative;
 }
 
-body {
-    margin: 0;
+#sliderContainer {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+#columnSlider,
+#rowSlider {
+    position: relative;
+    z-index: 10;
 }

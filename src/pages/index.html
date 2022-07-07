@@ -4,10 +4,15 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../css/main.css">
     <title>Document</title>
 </head>
 <body>
     <canvas id="hexCanvas" width="800" height="500"></canvas>
+    <div id="sliderContainer">
+        <input type="range" min="1" max="10" value="1" class="slider" id="rowSlider">
+        <input type="range" min="1" max="10" value="1" class="slider" id="columnSlider">
+    </div>
     <script defer src="../rendering/mainRenderer.js"></script>
 </body>
 </html>
