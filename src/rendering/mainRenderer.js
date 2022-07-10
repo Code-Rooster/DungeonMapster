@@ -21,8 +21,6 @@ var skelHex = new skeletonHexagon(topWidth, hexHeight, angleToRad(angle));
 var rows = 1;
 var columns = 1;
 
-var rawScale = 1;
-
 window.onresize = redrawCanvas;
 window.onload = redrawCanvas;
 
@@ -37,7 +35,6 @@ columnSlider.oninput = function() {
 }
 
 zoomSlider.oninput = function(){
-    rawScale = parseInt(this.value, 10);
     redrawCanvas();
 }
 
@@ -51,12 +48,12 @@ function redrawCanvas() {
     drawGrid(skelHex, rows, columns);
 }
 
-function processScale() {
-    return 2 / (1 + Math.pow(Math.E, -0.5 * rawScale));
+function getScale() {
+    return 2 / (1 + Math.pow(Math.E, -0.5 * parseInt(zoomSlider.value, 10)));
 }
 
 function drawGrid(baseHex, rows, columns) {
-    let scale = processScale();
+    let scale = getScale();
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -67,15 +64,15 @@ function drawGrid(baseHex, rows, columns) {
 
     for (let s = 0; s < rows; s++) {
         for (let r = 0; r < columns; r++) {
-            let hex = hexagon.hexFromSkel(baseHex, s, r);
+            let hex = new hexagon(baseHex.topWidth * scale, baseHex.height * scale, baseHex.angle, s, r);
             var baseCoords = { x: hex.cartCoords.x, y: hex.cartCoords.y };
 
-            baseCoords.x *= -(hex.height * Math.tan(hex.angle) / 2 - (hex.topWidth)) * scale;
-            baseCoords.y *= hex.height * scale;
+            baseCoords.x *= -(hex.height * Math.tan(hex.angle) / 2 - (hex.topWidth));
+            baseCoords.y *= hex.height;
 
             let offsetCoords = { x: baseCoords.x + offset.x, y: baseCoords.y + offset.y };
 
-            drawHexOutline(ctx, { x: offsetCoords.x, y: offsetCoords.y }, baseHex, 3 * processScale(), "#CEBC81");
+            drawHexOutline(ctx, { x: offsetCoords.x, y: offsetCoords.y }, hex, 3 * scale, "#CEBC81");
         }
     }
 }
