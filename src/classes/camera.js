@@ -1,14 +1,17 @@
-import world from './world.js';
+import { world } from './world.js';
 
-class camera {
+export class camera {
     constructor(position) {
         this.pos = position;
+        this.canvas = document.getElementById('canvas');
+        this.ctx = this.canvas.getContext('2d');
     }
 
     /**
      * @param {world} world 
      */
     render(world) {
+        console.log(this.ctx);
         world.objects.forEach(object => {
             object.renderInfos.forEach(renderInfo => {
                 renderInfo.points.forEach(point => {

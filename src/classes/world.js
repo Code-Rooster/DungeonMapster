@@ -1,11 +1,12 @@
-import { render } from './camera.js';
+import { camera } from './camera.js';
 
-class world {
+export class world {
     constructor(objects) {
         this.objects = objects;
+        this.cam = new camera({x: 0, y: 0, z: -10});
     }
 
-    update() {
-        render(this);
+    update(world) {
+        this.cam.render(world);
     }
 }
