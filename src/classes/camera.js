@@ -1,6 +1,9 @@
 import { world } from './world.js';
 
 export class camera {
+    /**
+     * @param {{x: number, y: number, z: number}} position 
+     */
     constructor(position) {
         this.pos = position;
         this.canvas = document.getElementById('canvas');
@@ -20,5 +23,14 @@ export class camera {
                 });
             });
         });
+    }
+
+    /**
+     * @param {{x: number, y: number, z: number}} worldPos 
+     */
+    worldToCamPoint(worldPos) {
+        let zOffset = this.pos.z - worldPos.z;
+
+
     }
 }
