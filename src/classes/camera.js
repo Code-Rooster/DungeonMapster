@@ -2,25 +2,50 @@ import { world } from './world.js';
 
 export class camera {
     /**
-     * @param {{x: number, y: number, z: number}} position 
+     * @param {{x: number, y: number, z: number}} position 3D position
+     * @param {{x: radians, y: radians, z: radians}} rotation 3D rotation
+     * @param {radians} HFoV horizontal FoV
+     * @param {radians} VFoV vertical FoV
      */
-    constructor(position) {
+    constructor(position, rotation, HFoV, VFoV) {
         this.pos = position;
+        this.rot = rotation;
+        this.HFoV = HFoV;
+        this.VFoV = VFoV;
+
+        /** @type {Canvas} canvas */
         this.canvas = document.getElementById('canvas');
+
+        /** @type {CanvasRenderingContext2D} ctx */
         this.ctx = this.canvas.getContext('2d');
     }
 
-    /**
-     * @param {world} world 
-     */
+    /** @param {world} world */
     render(world) {
-        console.log(this.ctx);
-        world.objects.forEach(object => {
-            object.renderInfos.forEach(renderInfo => {
-                renderInfo.points.forEach(point => {
-                    console.log(object.name);
-                    console.log(point);
+        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+        world.composites.forEach(composite => {
+            composite.shapes.forEach(shape => {
+
+                this.ctx.beginPath();
+
+                let firstPoint = shape.renderInfo.getTransformedRenderInfo.points.shift();
+
+                let firstCamPoint = this.worldToCamPoint(firstPoint);
+
+                this.ctx.moveTo(firstCamPoint.x, firstCamPoint.y);
+
+                shape.renderInfo.getTransformedRenderInfo.points.forEach(point => {
+                    let camPoint = this.worldToCamPoint(point);
+
+                    this.ctx.lineWidth = camPoint.lineThickness;
+
+                    this.ctx.lineTo(camPoint.x, camPoint.y);
                 });
+
+                this.ctx.closePath();
+
+                this.ctx.stroke();
             });
         });
     }
@@ -29,8 +54,17 @@ export class camera {
      * @param {{x: number, y: number, z: number}} worldPos 
      */
     worldToCamPoint(worldPos) {
-        let zOffset = this.pos.z - worldPos.z;
+        let deltaX = worldPos.x - this.pos.x;
+        let deltaY = worldPos.y - this.pos.y;
+        let deltaZ = worldPos.z - this.pos.z;
 
+        let canvasWidth = parseInt(this.canvas.width);
+        let canvasHeight = parseInt(this.canvas.height);
 
+        let screenPos = { x: canvasWidth * ((2 * deltaX / (deltaZ * Math.tan(this.VFoV)) + 0.5)),
+            y: canvasHeight * ((2 * deltaY / (deltaZ * Math.tan(this.HFoV))) + 0.5),
+            lineThickness: (1 / deltaZ) * ((canvasWidth + canvasHeight) / 100) };
+
+        return screenPos;
     }
 }
