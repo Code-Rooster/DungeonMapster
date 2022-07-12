@@ -1,6 +1,6 @@
 import { renderInfo } from "./renderInfo.js";
 
-export class shape {
+export class face {
     /** 
      * @param {{ x: number, y: number, z: number }[]} points 
      */

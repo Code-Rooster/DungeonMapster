@@ -1,4 +1,4 @@
-import { shape } from './shape.js'
+import { face } from './face.js'
 
 export class composite {
     /**
@@ -14,14 +14,14 @@ export class composite {
         this.position = initPosition;
         this.rotation = rotation;
 
-        let newShapes = [];
+        let newFaces = [];
 
         points2D.forEach(points => {
-            let newShape = this.createShape(points);
-            newShapes.push(newShape);
+            let newFace = this.createFace(points);
+            newFaces.push(newFace);
         });
 
-        this.shapes = newShapes;
+        this.faces = newFaces;
     }
 
     changeRot(newRot) {
@@ -36,7 +36,7 @@ export class composite {
         this.position = { x: this.position.x + units.x, y: this.position.y + units.y, z: this.position.z + units.z};
     }
 
-    createShape(points) {
-        return new shape(points, this);
+    createFace(points) {
+        return new face(points, this);
     }
 }

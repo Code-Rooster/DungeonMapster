@@ -23,14 +23,10 @@ export class renderInfo {
         console.log(this.parentComposite.position);
 
         this.points.forEach(point => {
-            let r = Math.sqrt(Math.pow(point.x, 2) + Math.pow(point.y, 2) + Math.pow(point.z, 2));
-            let xOffset = (point.x * Math.cos(rotOffsets.z) - point.y * Math.sin(rotOffsets.z))  + posOffsets.x;
-            let yOffset = point.x * Math.sin(rotOffsets.z) + point.y * Math.cos(rotOffsets.z) + posOffsets.y;
-            let zOffset = posOffsets.z;
+            let rotatedX = ((point.x) * Math.cos(rotOffsets.z) - (point.y) * Math.sin(rotOffsets.z));
+            let rotatedY = (point.x) * Math.sin(rotOffsets.z) + (point.y) * Math.cos(rotOffsets.z);
 
-            console.log(zOffset);
-
-            newPoints.push({ x: point.x + xOffset, y: point.y + yOffset, z: point.z + zOffset });
+            newPoints.push({ x: rotatedX + posOffsets.x, y: rotatedY + posOffsets.y, z: point.z + posOffsets.z });
         });
 
         return new renderInfo(newPoints, this.isFilled, this.isClosed, this.parentComposite);
