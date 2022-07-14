@@ -25,17 +25,17 @@ export class camera {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
         world.composites.forEach(composite => {
-            composite.shapes.forEach(shape => {
+            composite.faces.forEach(face => {
 
                 this.ctx.beginPath();
 
-                let firstPoint = shape.renderInfo.getTransformedRenderInfo.points.shift();
+                let firstPoint = face.renderInfo.getTransformedRenderInfo.points.shift();
 
                 let firstCamPoint = this.worldToCamPoint(firstPoint);
 
                 this.ctx.moveTo(firstCamPoint.x, firstCamPoint.y);
 
-                shape.renderInfo.getTransformedRenderInfo.points.forEach(point => {
+                face.renderInfo.getTransformedRenderInfo.points.forEach(point => {
                     let camPoint = this.worldToCamPoint(point);
 
                     this.ctx.lineWidth = camPoint.lineThickness;
