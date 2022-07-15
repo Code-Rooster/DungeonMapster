@@ -1,4 +1,5 @@
 import { composite } from "./composite.js";
+import { quaternion } from "./quaternion.js";
 
 export class renderInfo {
     /**
@@ -18,29 +19,22 @@ export class renderInfo {
         let newPoints = [];
 
         let posOffsets = this.parentComposite.position;
-        let rotUnitQ = this.parentComposite.rotation;
+        let rotUnitQ = new quaternion(this.parentComposite.rotation.w, this.parentComposite.rotation.x,
+            this.parentComposite.rotation.y, this.parentComposite.rotation.z);
+        let invUnitQ = new quaternion(rotUnitQ.w, -rotUnitQ.x, -rotUnitQ.y, -rotUnitQ.z);
+        rotUnitQ.normalize();
 
         this.points.forEach(point => {
-            let pointQ = { w: 0, x: point.x, y: point.y, z: point.z };
-            let rotQInverse = { w: rotUnitQ.w, x: -rotUnitQ.x, y: -rotUnitQ.y, z: -rotUnitQ.z };
+            let posQuat = new quaternion(0, point.x, point.y, point.z);
 
-            let rotatedQuaternion = this.multiplyQuaternions(this.multiplyQuaternions(rotUnitQ, pointQ), rotQInverse);
+            let rotatedQuaternion = quaternion.multiply(rotUnitQ, posQuat);
+            rotatedQuaternion = quaternion.multiply(rotatedQuaternion, invUnitQ);
 
             console.log(rotatedQuaternion);
 
-            newPoints.push({ x: rotatedQuaternion.x + posOffsets.x, y: rotatedQuaternion.y + posOffsets.y, z: rotatedQuaternion.z + posOffsets.z });
+            newPoints.push({ x: rotatedQuaternion.x, y: rotatedQuaternion.y, z: rotatedQuaternion.z });
         });
 
         return new renderInfo(newPoints, this.isFilled, this.isClosed, this.parentComposite);
-    }
-
-    multiplyQuaternions(q0, q1) {
-        let qProd = { w: 0, x: 0, y: 0, z: 0}
-        qProd.w = q0.w * q1.w - q0.x * q1.x - q0.y * q1.y - q0.z * q1.z;
-        qProd.x = q0.w * q1.x + q0.x * q1.w - q0.y * q1.z + q0.z * q1.y;
-        qProd.y = q0.w * q1.y + q0.x * q1.z + q0.y * q1.w - q0.z * q1.x;
-        qProd.z = q0.w * q1.z - q0.x * q1.y + q0.y * q1.x + q0.x * q1.w;
-
-        return qProd;
     }
 }

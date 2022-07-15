@@ -5,7 +5,7 @@ export class composite {
      * @param {string} name 
      * @param {number} id 
      * @param {{ x: number, y: number, z: number }} initPosition 
-     * @param {{x: radians, y: radians, z: radians }} rotation 
+     * @param {quaternion} rotation 
      * @param { points[][] } points2D 
      */
     constructor(name, id, initPosition, rotation, points2D) {
