@@ -75,5 +75,6 @@ function balanceThenRotate(input) {
 
 function rotate() {
     compositeToRender.changeRot({ w: parseInt(thetaSlider.value) * Math.PI / 180, x: Math.pow(parseFloat(xSlider.value / 360), 2), y: Math.pow(parseFloat(xSlider.value / 360), 2), z: Math.pow(parseFloat(xSlider.value / 360), 2) });
+    //compositeToRender.changePos({ x: 0, y: 0, z: -parseInt(thetaSlider.value)});
     testWorld.update(testWorld);
 }

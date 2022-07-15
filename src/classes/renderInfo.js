@@ -26,10 +26,10 @@ export class renderInfo {
 
             let rotatedQuaternion = this.multiplyQuaternions(this.multiplyQuaternions(rotUnitQ, pointQ), rotQInverse);
 
+            console.log(rotatedQuaternion);
+
             newPoints.push({ x: rotatedQuaternion.x + posOffsets.x, y: rotatedQuaternion.y + posOffsets.y, z: rotatedQuaternion.z + posOffsets.z });
         });
-
-        console.log(newPoints);
 
         return new renderInfo(newPoints, this.isFilled, this.isClosed, this.parentComposite);
     }

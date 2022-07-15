@@ -58,11 +58,12 @@ export class camera {
         let deltaY = worldPos.y - this.pos.y;
         let deltaZ = worldPos.z - this.pos.z;
 
-        let canvasWidth = parseInt(this.canvas.width);
-        let canvasHeight = parseInt(this.canvas.height);
+        let canvasWidth = parseFloat(this.canvas.width);
+        let canvasHeight = parseFloat(this.canvas.height);
 
-        let screenPos = { x: canvasWidth * ((2 * deltaX / (deltaZ * Math.tan(this.VFoV)) + 0.5)),
-            y: canvasHeight * ((2 * deltaY / (deltaZ * Math.tan(this.HFoV))) + 0.5),
+        let screenPos = { 
+            x: canvasWidth * (2 * deltaX / (deltaZ * Math.tan(this.VFoV)) + 0.5),
+            y: canvasHeight * (2 * deltaY / (deltaZ * Math.tan(this.HFoV)) + 0.5),
             lineThickness: (1 / deltaZ) * ((canvasWidth + canvasHeight) / 100) };
 
         return screenPos;
