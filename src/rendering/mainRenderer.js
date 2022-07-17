@@ -7,8 +7,9 @@ const thetaSlider = document.getElementById("thetaSlider");
 const xSlider = document.getElementById("xSlider");
 const ySlider = document.getElementById("ySlider");
 const zSlider = document.getElementById("zSlider");
+const zPosSlider = document.getElementById("zPosSlider");
 
-const quad = new composite("quad", 2, { x: 0, y: 0, z: 0 }, new quaternion(1, 0, 0, 0), [[{ x: -1, y: 1, z: 0 }, { x: 1, y: 1, z: 0 }, { x: 1, y: -1, z: 0 }, { x: -1, y: -1, z: 0 }]]);
+const quad = new composite("quad", 2, new vector3(0, 0, 0), new quaternion(1, 0, 0, 0), [[new vector3(-1, 1, 0), new vector3(1, 1, 0), new vector3(1, -1, 0), new vector3(-1, -1, 0)]]);
 
 const compositeToRender = quad;
 
@@ -16,29 +17,33 @@ const testWorld = new world([compositeToRender]);
 
 window.onload = testWorld.update(testWorld);
 
-var axisSliderVals = { x: 1, y: 0, z: 0 };
-
 thetaSlider.oninput = balanceThenRotate;
 xSlider.oninput = balanceThenRotate;
 ySlider.oninput = balanceThenRotate;
 zSlider.oninput = balanceThenRotate;
 
-function balanceThenRotate() {
-    let q = new quaternion(thetaSlider.value, xSlider.value, ySlider.value, zSlider.value);
-    q.normalize();
+zPosSlider.oninput = moveZ;
 
-    thetaSlider.value = q.w * 360;
-    xSlider.value = q.x * 360;
-    ySlider.value = q.y * 360;
-    zSlider.value = q.z * 360;
+function balanceThenRotate() {
+    let axis = new vector3(parseFloat(xSlider.value), parseFloat(ySlider.value), parseFloat(zSlider.value));
+    axis.normalize();
+
+    xSlider.value = axis.x * 360;
+    ySlider.value = axis.y * 360;
+    zSlider.value = axis.z * 360;
 
     rotate();
 }
 
+function moveZ() {
+    testWorld.cam.pos = new vector3(testWorld.cam.pos.x, testWorld.cam.pos.y, parseFloat(zPosSlider.value));
+    testWorld.update(testWorld);
+}
+
 function rotate() {
-    let q = new quaternion(thetaSlider.value, xSlider.value, ySlider.value, zSlider.value);
-    q.normalize();
-    let rotation = quaternion.unitQuatFromAngleAxis(q.w, new vector3(q.x, q.y, q.z));
-    compositeToRender.changeRot(q);
+    let axis = new vector3(parseFloat(xSlider.value), parseFloat(ySlider.value), parseFloat(zSlider.value));
+    axis.normalize();
+    let angle = parseFloat(thetaSlider.value) * Math.PI / 180;
+    testWorld.cam.rot = quaternion.unitQuatFromAngleAxis(angle, axis);
     testWorld.update(testWorld);
 }

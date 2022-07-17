@@ -1,9 +1,11 @@
+import { quaternion } from './quaternion.js';
+import { vector3 } from './vector3.js';
 import { world } from './world.js';
 
 export class camera {
     /**
-     * @param {{x: number, y: number, z: number}} position 3D position
-     * @param {{x: radians, y: radians, z: radians}} rotation 3D rotation
+     * @param {vector3} position 3D position
+     * @param {quaternion} rotation 3D rotation
      * @param {radians} HFoV horizontal FoV
      * @param {radians} VFoV vertical FoV
      */
@@ -51,20 +53,36 @@ export class camera {
     }
 
     /**
-     * @param {{x: number, y: number, z: number}} worldPos 
+     * @param {vector3} worldPos 
      */
     worldToCamPoint(worldPos) {
-        let deltaX = worldPos.x - this.pos.x;
-        let deltaY = worldPos.y - this.pos.y;
-        let deltaZ = worldPos.z - this.pos.z;
+        let camAxis = this.rot.axis;
 
         let canvasWidth = parseFloat(this.canvas.width);
         let canvasHeight = parseFloat(this.canvas.height);
 
+        console.log(camAxis);
+
+        let theta = Math.acos(vector3.dotProduct(camAxis, vector3.subtract(worldPos, this.pos)) / (camAxis.magnitude * Math.sqrt(Math.pow(worldPos.x, 2) + Math.pow(worldPos.y, 2) + Math.pow(worldPos.z, 2))));
+        let alpha = Math.acos(vector3.dotProduct(camAxis.firstPerpendicularVec, vector3.subtract(worldPos, this.pos).normalized()) / (camAxis.firstPerpendicularVec.magnitude * Math.sqrt(Math.pow(worldPos.x - this.pos.x, 2) + Math.pow(worldPos.y - this.pos.y, 2) + Math.pow(worldPos.z - this.pos.z, 2))));
+        let gamma = Math.acos(vector3.dotProduct(camAxis.secondPerpendicularVec, vector3.subtract(worldPos, this.pos).normalized()) / (camAxis.secondPerpendicularVec.magnitude * Math.sqrt(Math.pow(worldPos.x - this.pos.x, 2) + Math.pow(worldPos.y - this.pos.y, 2) + Math.pow(worldPos.z - this.pos.z, 2))));
+
+        let h = Math.sqrt(Math.pow(worldPos.x - this.pos.x, 2) + Math.pow(worldPos.y - this.pos.y, 2) + Math.pow(worldPos.z - this.pos.y, 2));
+
+        let thetaLength = h * Math.cos(theta);
+        let alphaLength = h * Math.cos(alpha);
+        let gammaLength = h * Math.cos(gamma);
+
+        console.log("dp: " + vector3.dotProduct(camAxis.firstPerpendicularVec, vector3.subtract(worldPos, this.pos)) / (camAxis.firstPerpendicularVec.magnitude * Math.sqrt(Math.pow(worldPos.x, 2) + Math.pow(worldPos.y, 2) + Math.pow(worldPos.z, 2))));
+        console.log(camAxis.firstPerpendicularVec);
+        console.log(camAxis.secondPerpendicularVec);
+        console.log("theta: " + theta + ", alpha: " + alpha + ", gamma: " + gamma);
+        console.log("xpos: " + canvasWidth * (alphaLength / (thetaLength)) + ", ypos: " + canvasHeight * (gammaLength / (thetaLength)))
+
         let screenPos = { 
-            x: canvasWidth * (2 * deltaX / (deltaZ * Math.tan(this.VFoV)) + 0.5),
-            y: canvasHeight * (2 * deltaY / (deltaZ * Math.tan(this.HFoV)) + 0.5),
-            lineThickness: (1 / deltaZ) * ((canvasWidth + canvasHeight) / 100) };
+            x: canvasWidth * (alphaLength / (thetaLength)),
+            y: canvasHeight * (gammaLength / (thetaLength)),
+            lineThickness: (1 / thetaLength) * ((canvasWidth + canvasHeight) / 100) };
 
         return screenPos;
     }

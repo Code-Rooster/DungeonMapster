@@ -11,10 +11,11 @@
     <div id="hexDiv"></div>
     <canvas id="canvas" width="800" height="600"></canvas>
     <div id="sliderContainer">
-        <input type="range" min="0" max="360" value="0" class="slider" id="thetaSlider">
-        <input type="range" min="0" max="360" value="0" class="slider" id="xSlider">
-        <input type="range" min="0" max="360" value="0" class="slider" id="ySlider">
-        <input type="range" min="0" max="360" value="360" class="slider" id="zSlider">
+        <input type="range" min="-180" max="360" value="0" class="slider" id="thetaSlider">
+        <input type="range" min="-180" max="360" value="0" class="slider" id="xSlider">
+        <input type="range" min="-180" max="360" value="360" class="slider" id="ySlider">
+        <input type="range" min="-180" max="360" value="0" class="slider" id="zSlider">
+        <input type="range" min="-100" max="0" value="-10" class="slider" id="zPosSlider">
     </div>
     <script defer type="module" src="../rendering/mainRenderer.js"></script>
 </body>

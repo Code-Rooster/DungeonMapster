@@ -1,9 +1,10 @@
 import { composite } from "./composite.js";
 import { quaternion } from "./quaternion.js";
+import { vector3 } from "./vector3.js";
 
 export class renderInfo {
     /**
-     * @param {{ x: number, y: number, z: number }[]} points
+     * @param {{ vector3 }[]} points
      * @param {boolean} isFilled 
      * @param {boolean} isClosed 
      * @param {composite} parentComposite
@@ -30,9 +31,7 @@ export class renderInfo {
             let rotatedQuaternion = quaternion.multiply(rotUnitQ, posQuat);
             rotatedQuaternion = quaternion.multiply(rotatedQuaternion, invUnitQ);
 
-            console.log(rotatedQuaternion);
-
-            newPoints.push({ x: rotatedQuaternion.x, y: rotatedQuaternion.y, z: rotatedQuaternion.z });
+            newPoints.push(new vector3(rotatedQuaternion.x + posOffsets.x, rotatedQuaternion.y + posOffsets.y, rotatedQuaternion.z + posOffsets.z));
         });
 
         return new renderInfo(newPoints, this.isFilled, this.isClosed, this.parentComposite);

@@ -8,6 +8,8 @@ export class quaternion {
         this.z = z;
     }
 
+    static identity = new quaternion(1, 0, 0, 0)
+
     static multiply(q0, q1) {
         let prodW = q0.w * q1.w - q0.x * q1.x - q0.y * q1.y - q0.z * q1.z;
         let prodX = q0.w * q1.x + q0.x * q1.w + q0.y * q1.z - q0.z * q1.y;
@@ -25,6 +27,16 @@ export class quaternion {
         this.z /= magnitude;
     }
 
+    normalized() {
+        let magnitude = Math.sqrt(this.w * this.w + this.x * this.x + this.y * this.y + this.z * this.z);
+        let normW = this.w / magnitude;
+        let normX = this.x / magnitude;
+        let normY = this.y / magnitude;
+        let normZ = this.z / magnitude;
+
+        return new vector3(normW, normX, normY, normZ);
+    }
+
     /**
      * @param { radians } angle 
      * @param { vector3 } axis 
@@ -37,8 +49,16 @@ export class quaternion {
         let sAngle = Math.sin(angle / 2);
 
         let unitQuat = new quaternion(Math.cos(angle / 2), axis.x * sAngle, axis.y * sAngle, axis.z * sAngle);
-        unitQuat.normalize();
 
         return unitQuat;
+    }
+
+    get axis() {
+        if(this.w != 1) {
+            let wComp = Math.sqrt(1 - (this.w * this.w));
+            return new vector3(this.x / wComp, this.y / wComp, this.z / wComp);
+        } else {
+            return new vector3(0, 1, 0);
+        }
     }
 }
