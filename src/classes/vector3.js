@@ -27,11 +27,11 @@ export class vector3 {
 
     get firstPerpendicularVec() {
         if(this.z != 0) {
-            return new vector3(1, 1, -(this.x + this.y) / this.z);
+            return new vector3(1, 1, -(this.x + this.y) / this.z).normalized();
         } else if(this.y != 0) {
-            return new vector3(1, -(this.x + this.z) / this.y, 1);
+            return new vector3(1, -(this.x + this.z) / this.y, 1).normalized();
         } else if(this.x != 0) {
-            return new vector3(-(this.y + this.z) / this.x, 1, 1);
+            return new vector3(-(this.y + this.z) / this.x, 1, 1).normalized();
         } else {
             console.log("vector had no magnitude.");
             return undefined;
@@ -39,7 +39,7 @@ export class vector3 {
     }
 
     get secondPerpendicularVec() {
-        return vector3.crossProduct(this, this.firstPerpendicularVec);
+        return vector3.crossProduct(this, this.firstPerpendicularVec).normalized();
     }
 
     /**
