@@ -9,7 +9,7 @@ const ySlider = document.getElementById("ySlider");
 const zSlider = document.getElementById("zSlider");
 const zPosSlider = document.getElementById("zPosSlider");
 
-const quad = new composite("quad", 2, new vector3(0, 0, 0), new quaternion(1, 0, 0, 0), [[new vector3(-1, 1, 0), new vector3(1, 1, 0), new vector3(1, -1, 0), new vector3(-1, -1, 0)]]);
+const quad = new composite("quad", 2, new vector3(0, 0, 0), quaternion.identity, [[new vector3(-1, 1, 0), new vector3(1, 1, 0), new vector3(1, -1, 0), new vector3(-1, -1, 0)]]);
 
 const compositeToRender = quad;
 

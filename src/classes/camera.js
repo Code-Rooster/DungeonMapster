@@ -61,29 +61,38 @@ export class camera {
         let canvasWidth = parseFloat(this.canvas.width);
         let canvasHeight = parseFloat(this.canvas.height);
 
-        console.log(camAxis);
+        let worldPosMagnitude = worldPos.magnitude;
+        let offsetWorldPosMagnitude = Math.sqrt(Math.pow(worldPos.x - this.pos.x, 2), Math.pow(worldPos.y - this.pos.y, 2), Math.pow(worldPos.z - this.pos.z, 2));
 
-        let theta = Math.acos(vector3.dotProduct(camAxis, vector3.subtract(worldPos, this.pos)) / (camAxis.magnitude * Math.sqrt(Math.pow(worldPos.x, 2) + Math.pow(worldPos.y, 2) + Math.pow(worldPos.z, 2))));
-        let alpha = Math.acos(vector3.dotProduct(camAxis.firstPerpendicularVec, vector3.subtract(worldPos, this.pos).normalized()) / (camAxis.firstPerpendicularVec.magnitude * Math.sqrt(Math.pow(worldPos.x - this.pos.x, 2) + Math.pow(worldPos.y - this.pos.y, 2) + Math.pow(worldPos.z - this.pos.z, 2))));
-        let gamma = Math.acos(vector3.dotProduct(camAxis.secondPerpendicularVec, vector3.subtract(worldPos, this.pos).normalized()) / (camAxis.secondPerpendicularVec.magnitude * Math.sqrt(Math.pow(worldPos.x - this.pos.x, 2) + Math.pow(worldPos.y - this.pos.y, 2) + Math.pow(worldPos.z - this.pos.z, 2))));
+        console.log("owp: " + offsetWorldPosMagnitude);
 
-        let h = Math.sqrt(Math.pow(worldPos.x - this.pos.x, 2) + Math.pow(worldPos.y - this.pos.y, 2) + Math.pow(worldPos.z - this.pos.y, 2));
+        let theta = Math.acos(vector3.dotProduct(camAxis, worldPos) / (camAxis.magnitude * worldPos.magnitude));
+        let alpha = Math.acos(vector3.dotProduct(camAxis.firstPerpendicularVec, vector3.subtract(worldPos, this.pos).normalized()) / (camAxis.firstPerpendicularVec.magnitude * offsetWorldPosMagnitude));
+        let gamma = Math.acos(vector3.dotProduct(camAxis.secondPerpendicularVec, vector3.subtract(worldPos, this.pos).normalized()) / (camAxis.secondPerpendicularVec.magnitude * offsetWorldPosMagnitude));
+
+        let h = Math.sqrt(Math.pow(worldPos.x - this.pos.x, 2) + Math.pow(worldPos.y - this.pos.y, 2) + Math.pow(worldPos.z - this.pos.z, 2));
 
         let thetaLength = h * Math.cos(theta);
-        let alphaLength = h * Math.cos(alpha);
-        let gammaLength = h * Math.cos(gamma);
+        //let thetaLength = this.pos.z - worldPos.z;
+        let alphaLength = this.pos.x - worldPos.x;
+        let gammaLength = this.pos.y - worldPos.y;
 
-        console.log("dp: " + vector3.dotProduct(camAxis.firstPerpendicularVec, vector3.subtract(worldPos, this.pos)) / (camAxis.firstPerpendicularVec.magnitude * Math.sqrt(Math.pow(worldPos.x, 2) + Math.pow(worldPos.y, 2) + Math.pow(worldPos.z, 2))));
-        console.log(camAxis.firstPerpendicularVec);
-        console.log(camAxis.secondPerpendicularVec);
-        console.log("theta: " + theta + ", alpha: " + alpha + ", gamma: " + gamma);
-        console.log("xpos: " + canvasWidth * (alphaLength / (thetaLength)) + ", ypos: " + canvasHeight * (gammaLength / (thetaLength)))
+        console.log("theta: " + vector3.dotProduct(camAxis, vector3.subtract(worldPos, this.pos)));
+        console.log("h: " + h + ", cos(theta): " + Math.cos(theta));
+        console.log("thetaLength: " + thetaLength);
 
-        let screenPos = { 
-            x: canvasWidth * (alphaLength / (thetaLength)),
-            y: canvasHeight * (gammaLength / (thetaLength)),
-            lineThickness: (1 / thetaLength) * ((canvasWidth + canvasHeight) / 100) };
+        if(theta > 0) {
 
-        return screenPos;
+            let screenPos = { 
+                x: canvasWidth * (alphaLength / (thetaLength) + 0.5),
+                y: canvasHeight * (gammaLength / (thetaLength) + 0.5),
+                lineThickness: (1 / thetaLength) * ((canvasWidth + canvasHeight) / 100) };
+
+            console.log(screenPos);
+
+            return screenPos;
+        } else {
+            return { x: 0, y: 0, lineThickness: 0 };
+        }
     }
 }

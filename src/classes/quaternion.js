@@ -49,6 +49,7 @@ export class quaternion {
         let sAngle = Math.sin(angle / 2);
 
         let unitQuat = new quaternion(Math.cos(angle / 2), axis.x * sAngle, axis.y * sAngle, axis.z * sAngle);
+        unitQuat.normalize();
 
         return unitQuat;
     }
