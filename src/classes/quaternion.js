@@ -34,7 +34,7 @@ export class quaternion {
         let normY = this.y / magnitude;
         let normZ = this.z / magnitude;
 
-        return new vector3(normW, normX, normY, normZ);
+        return new quaternion(normW, normX, normY, normZ);
     }
 
     /**
@@ -59,7 +59,12 @@ export class quaternion {
             let wComp = Math.sqrt(1 - (this.w * this.w));
             return new vector3(this.x / wComp, this.y / wComp, this.z / wComp);
         } else {
-            return new vector3(0, 1, 0);
+            return new vector3(0, 0, 1);
         }
+    }
+
+    get angle() {
+        let normQuat = this.normalized()
+        return 2 * Math.acos(normQuat.w);
     }
 }

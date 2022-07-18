@@ -41,9 +41,11 @@ function moveZ() {
 }
 
 function rotate() {
+    console.log(testWorld.cam.rot);
     let axis = new vector3(parseFloat(xSlider.value), parseFloat(ySlider.value), parseFloat(zSlider.value));
     axis.normalize();
     let angle = parseFloat(thetaSlider.value) * Math.PI / 180;
     testWorld.cam.rot = quaternion.unitQuatFromAngleAxis(angle, axis);
+    console.log(testWorld.cam.rot);
     testWorld.update(testWorld);
 }
