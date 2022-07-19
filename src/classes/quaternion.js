@@ -54,6 +54,10 @@ export class quaternion {
         return unitQuat;
     }
 
+    static quatFromPoint(point) {
+        return new quaternion(0, point.x, point.y, point.z);
+    }
+
     get axis() {
         if(this.w != 1) {
             let wComp = Math.sqrt(1 - (this.w * this.w));
@@ -66,5 +70,9 @@ export class quaternion {
     get angle() {
         let normQuat = this.normalized()
         return 2 * Math.acos(normQuat.w);
+    }
+
+    get inverse() {
+        return new quaternion(this.w, -this.x, -this.y, -this.z);
     }
 }
