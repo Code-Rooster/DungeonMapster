@@ -86,10 +86,10 @@ export class camera {
         let alphaLength = h * Math.cos(alpha);
         let gammaLength = h * Math.cos(gamma);
 
-        if(true) {
+        if(thetaLength > 0) {
             let screenPos = { 
                 x: canvasWidth * (1 - ((alphaLength / (thetaLength) + 0.5))),
-                y: canvasHeight * (1 - ((gammaLength / (thetaLength) + 0.5))),
+                y: canvasHeight * (1 - ((gammaLength / (thetaLength) + 0.5))) * canvasWidth / canvasHeight,
                 lineThickness: (1 / thetaLength) * ((canvasWidth + canvasHeight) / 100) };
 
             return screenPos;
